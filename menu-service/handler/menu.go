@@ -2,10 +2,10 @@ package handler
 
 import (
 	"net/http"
-	"digitalent-microservice/utils"
+	"digitalent-microservice/menu-service/utils"
 )
 
 func AddMenu(w http.ResponseWriter, r *http.Request) {
-	utils.WrapAPISuccess(w, r ,"success", http.StatusOk)
+	utils.WrapAPISuccess(w, r ,"success", http.StatusOK)
 
 }
