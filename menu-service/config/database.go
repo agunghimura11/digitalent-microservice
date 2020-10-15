@@ -7,5 +7,5 @@ type Database struct {
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
 	DbName   string `mapstructure:"db_name"`
-	Config   string `charset=utf8&parseTime=True&loc=Local`
+	Config   string `mapstructure:"config"`
 }

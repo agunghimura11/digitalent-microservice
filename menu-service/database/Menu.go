@@ -2,11 +2,10 @@ package database
 
 import (
 	"gorm.io/gorm"
-	"fmt"
 )
 
 type Menu struct {
-	ID       int    `json:"id" gorm:"primary_key"`
+	ID       int    `json:"-" gorm:"primary_key"`
 	MenuName string `json:"menu_name"`
 	Price    int    `json:"price"`
 }
@@ -17,7 +16,7 @@ func (menu *Menu) Insert(db *gorm.DB) error {
 	if result.Error != nil {
 		return result.Error
 	}
-	fmt.Println("Berhasil insert menu")
+
 	return nil
 }
 

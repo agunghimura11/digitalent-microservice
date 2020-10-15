@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-
 	"log"
 	"net/http"
+	"digitalent-microservice/menu-service/config"
+	"digitalent-microservice/menu-service/handler"
+	"digitalent-microservice/menu-service/database"
+
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"digitalent-microservice/menu-service/config"
-	"digitalent-microservice/menu-service/handler"
-	"digitalent-microservice/menu-service/database"
 )
 
 func main(){
@@ -26,18 +26,24 @@ func main(){
 			DbName   : "digitalent_microservice",
 			Config   :`charset=utf8&parseTime=True&loc=Local`,
 		},
+		Auth : config.Auth {
+			Host: "https:///localhost:8001"
+		}
 	}
-	
+
 	db, err := initDB(cfg.Database)
 	if err != nil {
 		log.Panic(err)
 		return
-	} 
+	}
 
 	router := mux.NewRouter()
 
 	menuHandler := handler.MenuHandler{
-		Db: db,
+		db: db,
+	}
+	authHandler := handler.AuthHandler{
+		Config: cfg.Auth,
 	}
 
 	router.Handle("/add-menu", http.HandlerFunc(menuHandler.AddMenu))
