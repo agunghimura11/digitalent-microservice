@@ -36,10 +36,14 @@ func main(){
 
 	router := mux.NewRouter()
 
+	authMiddleware := handler.AuthMiddleware{
+		AuthService: cfg.AuthService,
+	}
+
 	menuHandler := handler.Menu{Db: db}
 
 	router.Handle("/add-menu", http.HandlerFunc(menuHandler.AddMenu))
-	router.Handle("/menu", http.HandlerFunc(menuHandler.GetAllMenu))
+	router.Handle("/menu", authMiddleware.ValidateAuth(http.HandlerFunc(menuHandler.GetAllMenu)))
 
 	fmt.Printf("Server listen on :%s", cfg.Port)
 	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router))

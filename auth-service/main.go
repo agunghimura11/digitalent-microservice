@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/wskurniawan/intro-microservice/auth/handler"
+	"digitalent-microservice/auth-service/handler"
 	"log"
 	"net/http"
 )

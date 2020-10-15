@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/wskurniawan/intro-microservice/utils"
+	"digitalent-microservice/menu-service/utils"
 	"net/http"
 )
 
