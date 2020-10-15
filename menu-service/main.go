@@ -38,7 +38,8 @@ func main(){
 
 	menuHandler := handler.Menu{Db: db}
 
-	router.Handle("/add-product", http.HandlerFunc(menuHandler.AddMenu))
+	router.Handle("/add-menu", http.HandlerFunc(menuHandler.AddMenu))
+	router.Handle("/menu", http.HandlerFunc(menuHandler.GetAllMenu))
 
 	fmt.Printf("Server listen on :%s", cfg.Port)
 	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router))
