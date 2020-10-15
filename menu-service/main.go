@@ -24,11 +24,8 @@ func main(){
 			User     : "root",
 			Password : "",
 			DbName   : "digitalent_microservice",
-			Config   :`charset=utf8&parseTime=True&loc=Local`,
+			Config   : "charset=utf8&parseTime=True&loc=Local",
 		},
-		Auth : config.Auth {
-			Host: "https:///localhost:8001"
-		}
 	}
 
 	db, err := initDB(cfg.Database)
@@ -39,22 +36,16 @@ func main(){
 
 	router := mux.NewRouter()
 
-	menuHandler := handler.MenuHandler{
-		db: db,
-	}
-	authHandler := handler.AuthHandler{
-		Config: cfg.Auth,
-	}
+	menuHandler := handler.Menu{Db: db}
 
-	router.Handle("/add-menu", http.HandlerFunc(menuHandler.AddMenu))
-	router.Handle("/menu", http.HandlerFunc(menuHandler.GetMenu))
+	router.Handle("/add-product", http.HandlerFunc(menuHandler.AddMenu))
 
-	fmt.Println("Menu service listen on port :8000")
-	log.Panic(http.ListenAndServe(":8000", router))
+	fmt.Printf("Server listen on :%s", cfg.Port)
+	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router))
 }
 
 func initDB(dbConfig config.Database) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Config)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.DbName,dbConfig.Config)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
