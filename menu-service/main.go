@@ -2,13 +2,16 @@ package main
 
 import (
 	"fmt"
+
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
+	"digitalent-microservice/menu-service/config"
 	"digitalent-microservice/menu-service/handler"
+	"digitalent-microservice/menu-service/database"
 )
 
 func main(){
@@ -20,7 +23,7 @@ func main(){
 			Port     : "3306",
 			User     : "root",
 			Password : "",
-			DbName   : "test",
+			DbName   : "digitalent_microservice",
 			Config   :`charset=utf8&parseTime=True&loc=Local`,
 		},
 	}
@@ -33,7 +36,12 @@ func main(){
 
 	router := mux.NewRouter()
 
-	router.Handle("/add-menu", http.HandlerFunc(handler.AddMenu))
+	menuHandler := handler.MenuHandler{
+		Db: db,
+	}
+
+	router.Handle("/add-menu", http.HandlerFunc(menuHandler.AddMenu))
+	router.Handle("/menu", http.HandlerFunc(menuHandler.GetMenu))
 
 	fmt.Println("Menu service listen on port :8000")
 	log.Panic(http.ListenAndServe(":8000", router))
