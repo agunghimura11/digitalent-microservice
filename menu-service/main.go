@@ -7,7 +7,6 @@ import (
 	"digitalent-microservice/menu-service/config"
 	"digitalent-microservice/menu-service/handler"
 	"digitalent-microservice/menu-service/database"
-
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -45,11 +44,13 @@ func main(){
 	router.Handle("/add-menu", http.HandlerFunc(menuHandler.AddMenu))
 	router.Handle("/menu", authMiddleware.ValidateAuth(http.HandlerFunc(menuHandler.GetAllMenu)))
 
-	fmt.Printf("Server listen on :%s", cfg.Port)
-	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router))
+	fmt.Printf("Auth service listen on :8001")
+	log.Panic(http.ListenAndServe(":8001", router))
 }
 
 func initDB(dbConfig config.Database) (*gorm.DB, error) {
+	log.Println("config", dbConfig)
+	//dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.DbName,dbConfig.Config)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.DbName,dbConfig.Config)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -62,3 +63,4 @@ func initDB(dbConfig config.Database) (*gorm.DB, error) {
 	}
 	return db, nil
 }
+
