@@ -7,9 +7,9 @@ import (
 
 type Auth struct {
 	ID       	int    `json:"-" gorm:"primary_key"`
-	Username 	string `json:"username"`
-	Password    string    `json:"password"`
-	Token 		string `json:"token"`
+	Username 	string `json:"username,omitempty"`
+	Password    string    `json:"password,omitempty"`
+	Token 		string `json:"token,omitempty"`
 }
 
 //func  ValidateAuth(token string,db *gorm.DB) (*Auth,error)  {
@@ -22,7 +22,7 @@ type Auth struct {
 //}
 
 func (auth *Auth) SignUp (db *gorm.DB) error {
-	// SELECT * FROM AUTH WHERE username = "fadhlan@gmail.com"
+
 	if err:= db.Where(&Auth{Username: auth.Username}).First(auth).Error;err != nil {
 		if err == gorm.ErrRecordNotFound{
 			if err = db.Create(auth).Error; err != nil {

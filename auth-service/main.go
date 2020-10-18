@@ -30,8 +30,9 @@ func main() {
 	authHandler := handler.AuthDB{Db: db}
 
 	router.Handle("/admin-auth", http.HandlerFunc(handler.ValidateAuth))
-
 	router.Handle("/auth/signup", http.HandlerFunc(authHandler.SignUp))
+	router.Handle("/auth/login", http.HandlerFunc(authHandler.Login))
+
 	fmt.Printf("Auth service listen on :8001")
 	log.Panic(http.ListenAndServe(":8001", router))
 }
