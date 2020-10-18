@@ -8,9 +8,18 @@ import (
 type Auth struct {
 	ID       	int    `json:"-" gorm:"primary_key"`
 	Username 	string `json:"username"`
-	Password    int    `json:"password"`
+	Password    string    `json:"password"`
 	Token 		string `json:"token"`
 }
+
+//func  ValidateAuth(token string,db *gorm.DB) (*Auth,error)  {
+//	var auth Auth
+//
+//	if err := db.Where(&Auth{Token: token}).First(&auth).Error; err != nil {
+//		return nil, errors.Errorf("invalid Token")
+//	}
+//
+//}
 
 func (auth *Auth) SignUp (db *gorm.DB) error {
 	// SELECT * FROM AUTH WHERE username = "fadhlan@gmail.com"
@@ -20,8 +29,8 @@ func (auth *Auth) SignUp (db *gorm.DB) error {
 				return err
 			}
 		}
-
-		return err
+	}else{
+		return errors.Errorf("Duplicate Email")
 	}
 
 	return nil

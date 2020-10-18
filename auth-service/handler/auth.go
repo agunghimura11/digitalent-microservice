@@ -2,7 +2,7 @@ package handler
 
 import (
 	"digitalent-microservice/auth-service/database"
-	"digitalent-microservice/menu-service/utils"
+	"digitalent-microservice/auth-service/utils"
 	"encoding/json"
 	"gorm.io/gorm"
 	"io/ioutil"
@@ -24,6 +24,16 @@ func ValidateAuth(w http.ResponseWriter, r *http.Request) {
 		utils.WrapAPIError(w, r, "Invalid auth", http.StatusForbidden)
 		return
 	}
+
+	//res, err := database.ValidateAuth(authToken, db.Db); if err != nil {
+	//	utils.WrapAPIError(w,r,"error "+err.Error(), http.StatusBadRequest)
+	//	return
+	//}
+
+	//utils.WrapAPIData(w,r,database.Auth{
+	//	Username: res.Username,
+	//	Token: res.Token
+	//}, http.StatusOK, "success")
 
 	if authToken != "asdfghjk" {
 		utils.WrapAPIError(w, r, "Invalid auth", http.StatusForbidden)
@@ -70,6 +80,32 @@ func (db *AuthDB) Login  (w http.ResponseWriter, r *http.Request) {
 		utils.WrapAPIError(w,r,http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		utils.WrapAPIError(w,r, "cant read", http.StatusBadRequest)
+		return
+	}
+
+	var login database.Auth
+
+	err = json.Unmarshal(body, &login)
+	if err != nil {
+		utils.WrapAPIError(w,r, "error unmarshal"+err.Error(), http.StatusInternalServerError)
+	}
+
+	login.Token = utils.IdGenerator()
+
+	res, err := login.Login(db.Db); if err != nil {
+		utils.WrapAPIError(w,r,"error "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	utils.WrapAPIData(w,r, database.Auth{
+		Username: res.Username,
+		Token: res.Token,
+	}, http.StatusOK,"success")
 
 	// LOGIN
 }

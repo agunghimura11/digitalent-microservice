@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"digitalent-microservice/menu-service/database"
 	"digitalent-microservice/menu-service/utils"
+	"fmt"
 	"gorm.io/gorm"
 	"io/ioutil"
 	"net/http"
@@ -27,12 +29,16 @@ func (menu *Menu) AddMenu(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username := context.Get(r, "user")
+
 	var dataMenu database.Menu
 	err = json.Unmarshal(body, &dataMenu)
 	if err != nil {
 		utils.WrapAPIError(w, r, "error unmarshal : "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	dataMenu.Username = fmt.Sprintf("%v", username)
 
 	err = dataMenu.Insert(menu.Db)
 	if err != nil {
