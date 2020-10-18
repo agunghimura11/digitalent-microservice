@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"context"
+	"github.com/gorilla/context"
 	"encoding/json"
 	"digitalent-microservice/menu-service/database"
 	"digitalent-microservice/menu-service/utils"
 	"fmt"
 	"gorm.io/gorm"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -17,6 +18,7 @@ type Menu struct {
 
 // AddMenuHandler handle add menu
 func (menu *Menu) AddMenu(w http.ResponseWriter, r *http.Request) {
+	log.Printf("hello")
 	if r.Method != "POST" {
 		utils.WrapAPIError(w, r, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
@@ -30,6 +32,7 @@ func (menu *Menu) AddMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := context.Get(r, "user")
+	// untuk mendapatkan value dari service auth-servie berupa username user login, informasi didapatkan dari token user
 
 	var dataMenu database.Menu
 	err = json.Unmarshal(body, &dataMenu)

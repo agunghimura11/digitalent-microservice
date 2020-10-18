@@ -33,8 +33,10 @@ func main() {
 	router.Handle("/auth/signup", http.HandlerFunc(authHandler.SignUp))
 	router.Handle("/auth/login", http.HandlerFunc(authHandler.Login))
 
-	fmt.Printf("Auth service listen on :8001")
-	log.Panic(http.ListenAndServe(":8001", router))
+	//fmt.Printf("Auth service listen on :#{cfg.port}")
+	//log.Panic(http.ListenAndServe(fmt.Sprintf(":#{cfg.port}"), router))
+	fmt.Printf("Server listen on :%s", cfg.Port)
+	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router))
 }
 
 func getConfig() (config.Config, error) {
