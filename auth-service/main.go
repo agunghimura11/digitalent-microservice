@@ -29,7 +29,7 @@ func main() {
 	router := mux.NewRouter()
 	authHandler := handler.AuthDB{Db: db}
 
-	router.Handle("/admin-auth", http.HandlerFunc(handler.ValidateAuth))
+	router.Handle("/auth/validate", http.HandlerFunc(authHandler.ValidateAuth))
 	router.Handle("/auth/signup", http.HandlerFunc(authHandler.SignUp))
 	router.Handle("/auth/login", http.HandlerFunc(authHandler.Login))
 

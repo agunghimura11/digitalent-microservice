@@ -11,15 +11,20 @@ type Auth struct {
 	Password    string    `json:"password,omitempty"`
 	Token 		string `json:"token,omitempty"`
 }
+// validasi token
+func  ValidateAuth(token string,db *gorm.DB) (*Auth,error)  {
+	var auth Auth
 
-//func  ValidateAuth(token string,db *gorm.DB) (*Auth,error)  {
-//	var auth Auth
-//
-//	if err := db.Where(&Auth{Token: token}).First(&auth).Error; err != nil {
-//		return nil, errors.Errorf("invalid Token")
-//	}
-//
-//}
+	// cek jika token match
+	if err := db.Where(&Auth{Token: token}).First(&auth).Error; err != nil {
+		if err == gorm.ErrRecordNotFound{
+			return nil, errors.Errorf("invalid Token")
+		}
+	}
+
+	return &auth, nil
+
+}
 
 func (auth *Auth) SignUp (db *gorm.DB) error {
 
